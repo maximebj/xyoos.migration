@@ -27,8 +27,7 @@ function migrate_xyoos()
     $content = '';
     $result  = '';
     
-
-    $test_ID = 9123;
+    $test_ID = 209;
 
     // Get posts to migrate
     $args = array(
@@ -50,8 +49,8 @@ function migrate_xyoos()
             
             // Definition
             if (get_row_layout() == 'definition'):
-              $post_object = get_sub_field('definition');
-              $content .= ' <!-- wp:xyoos/definition {"definitionID":' . $post_object . '} /-->';
+              $definition = get_sub_field('definition');
+              $content .= ' <!-- wp:xyoos/definition {"definitionID":' . $definition->ID . '} /-->';
             
             // Exercice
             elseif (get_row_layout() == 'exercice'):
@@ -139,12 +138,12 @@ function migrate_xyoos()
 
               require_once plugin_dir_path(__FILE__) . 'lib/simple_html_dom.php';
               
-              $html = str_get_html($text);
+              $DOM = str_get_html( $text );
 
               // Captions
               $captions = array();
               
-              foreach ($html->find('.image-caption') as $element):
+              foreach ($DOM->find('.image-caption') as $element):
 
                 $captions[] = $element->innertext; 
 
@@ -154,7 +153,7 @@ function migrate_xyoos()
               
               // Img 
               $i = 0; 
-              foreach ($html->find('img') as $element):
+              foreach ($DOM->find('img') as $element):
 
                 // Get ID in classname
                 preg_match_all( '!\d+!', $element->class, $matches);         
@@ -171,10 +170,7 @@ function migrate_xyoos()
               endforeach;
               
               // Tree DOM to String
-              $text = $html;
-
-              echo "<code style='max-width: 600px'>" .  htmlspecialchars( nl2br( $html)) . "</code>";
-
+              $text = (string)$DOM;
 
               // P
               $text = str_replace('<p', '<!-- wp:paragraph --><p', $text);
