@@ -8,21 +8,21 @@ abstract class Convert {
   
   protected function convert_definition() {
 
-    $definition = get_sub_field('definition');
+    $definition = get_sub_field( 'definition' );
     return ' <!-- wp:xyoos/definition {"definitionID":' . $definition->ID . '} /-->';
   }
 
 
   protected function convert_exercice() {
-    $exercice = get_sub_field('id');
+    $exercice = get_sub_field( 'id' );
     return '<!-- wp:xyoos/exercice {"exerciceID":"' . $exercice . '"} /-->';
   }
 
 
   protected function convert_bouton() {
-    $url      = get_sub_field('url');
-    $intitule = get_sub_field('intitule');
-    $target   = get_sub_field('cible') ? '_blank' : '';
+    $url      = get_sub_field( 'url' );
+    $intitule = get_sub_field( 'intitule' );
+    $target   = get_sub_field( 'cible' ) ? '_blank' : '';
     return '
       <!-- wp:xyoos/button {"buttonClass":"green"} -->
       <p class="wp-block-xyoos-button">
@@ -38,7 +38,7 @@ abstract class Convert {
 
   protected function convert_texte( $text = false ) {
     
-    $text = ( ! $text ) ? get_sub_field('contenu') : $text;
+    $text = ( ! $text ) ? get_sub_field( 'contenu' ) : $text;
 
     if( $text == "" ) { return ''; }
   
@@ -49,7 +49,7 @@ abstract class Convert {
     // Captions
     $captions = array();
 
-    foreach ($DOM->find('.image-caption') as $element):
+    foreach ($DOM->find('.image-caption' ) as $element):
 
       $captions[] = $element->innertext; 
 
@@ -59,7 +59,7 @@ abstract class Convert {
 
     // Img 
     $i = 0; 
-    foreach ($DOM->find('img') as $element):
+    foreach ($DOM->find('img' ) as $element):
 
       // Get ID in classname
       preg_match_all( '!\d+!', $element->class, $matches);         
@@ -146,47 +146,39 @@ abstract class Convert {
 
 
   protected function convert_texte_pub() {
-    $position = get_sub_field('position_de_la_pub') == 'left';
-    $text     = get_sub_field('contenu');
+    $position = get_sub_field( 'position_de_la_pub' ) == 'left';
+    $text     = get_sub_field( 'contenu' );
 
-    // Convert text
+    // Convert texts
     // TODO Test
     $text = $this->convert_texte( $text );
 
-    if ($position == 'left') {
-      $left_markup = '
-        <!-- wp:column -->
-          <div class="wp-block-column">
-            <!-- wp:xyoos/rectangle /-->
-          </div>
-        <!-- /wp:column -->
-      ';
-      $right_markup = '';
+    // Markups
+    $content_markup = $text;
+    $ad_markup = '<!-- wp:xyoos/rectangle /-->';
 
+    // dispatch left / right
+    if ($position == 'left' ) {
+      $left_markup = $ad_markup;
+      $right_markup = $content_markup;
     } else {
-
-      $left_markup = '';
-      $right_markup = '
-        <!-- wp:column -->
-          <div class="wp-block-column">
-            <!-- wp:xyoos/rectangle /-->
-          </div>
-        <!-- /wp:column -->
-      ';
+      $left_markup = $content_markup;
+      $right_markup = $ad_markup;
     }
 
-    $content .= '
+    return '
       <!-- wp:columns -->
         <div class="wp-block-columns">
-          ' . $left_markup . '
-
           <!-- wp:column -->
             <div class="wp-block-column">
-              ' . $text . ' 
+              ' . $left_markup . '
             </div>
           <!-- /wp:column -->
-
-          ' . $right_markup . '
+          <!-- wp:column -->
+            <div class="wp-block-column">
+              ' . $right_markup . '
+            </div>
+          <!-- /wp:column -->
         </div>
       <!-- /wp:columns -->
     ';
@@ -194,57 +186,49 @@ abstract class Convert {
 
 
   protected function convert_texte_image() {
-    $image    = get_sub_field('image');
-    $text     = get_sub_field('contenu');
-    $position = get_sub_field('position_de_limage') == 'left';
+    $image    = get_sub_field( 'image' );
+    $position = get_sub_field( 'position_de_limage' );
+    $text     = get_sub_field( 'contenu' );
+    
+    // Convert texts
+    $text = $this->convert_texte( $text );
 
-    if (get_sub_field('position_de_limage') == 'left'):
-      $content .= '
-        <!-- wp:columns -->
-          <div class="wp-block-columns has-2-columns">
-            <!-- wp:column -->
-              <div class="wp-block-column ' . $position . '">
-                <!-- wp:image -->
-                  <figure class="wp-block-image">
-                    <img src="' . $image['sizes']['large'] . '" alt="' . $image['title'] . '"/>
-                  </figure>
-                <!-- /wp:image -->                  
-              </div>
-            <!-- /wp:column -->
+    // Markups
+    $content_markup = $text;
+    $img_markup = '
+      <!-- wp:image {"id":' . $image['ID'] . ' } -->
+        <figure class="wp-block-image">
+          <img src="' . $image['sizes']['large'] . '" alt="' . $image['alt'] . '" class="wp-image-' . $image['ID'] . '"/>
+        </figure>
+      <!-- /wp:image --> 
+    ';
+    
+    // Dispatch left / right
+    if ($position == 'left' ) {
+      $left_markup = $img_markup;
+      $right_markup = $content_markup;
+    } else {
+      $left_markup = $content_markup;
+      $right_markup = $img_markup;
+    }
 
-            <!-- wp:column -->
-              <div class="wp-block-column">
-                <!-- wp:paragraph -->
-                  <p>' . $text . '</p>
-                <!-- /wp:paragraph -->
-              </div>
-            <!-- /wp:column -->
-          </div>
-        <!-- /wp:columns -->
-      ';
-    else:
-      $content .= '
-        <!-- wp:columns -->
-          <div class="wp-block-columns has-2-columns">
-            <!-- wp:column -->
-              <div class="wp-block-column">
-                <!-- wp:paragraph -->
-                  <p>' . $text . '</p>
-                <!-- /wp:paragraph -->
-              </div>
-            <!-- /wp:column -->
-            <!-- wp:column -->
-              <div class="wp-block-column ' . $position . '">
-                <!-- wp:image -->
-                  <figure class="wp-block-image">
-                    <img src="' . $image['sizes']['large'] . '" alt="' . $image['title'] . '"/>
-                  </figure>
-                <!-- /wp:image -->                  
-              </div>
-            <!-- /wp:column -->
-          </div>
-        <!-- /wp:columns -->
-      ';
+    return '
+      <!-- wp:columns -->
+        <div class="wp-block-columns">
+          <!-- wp:column -->
+            <div class="wp-block-column">
+              ' . $left_markup . '                 
+            </div>
+          <!-- /wp:column -->
+
+          <!-- wp:column -->
+            <div class="wp-block-column">
+              ' . $right_markup . '
+            </div>
+          <!-- /wp:column -->
+        </div>
+      <!-- /wp:columns -->
+    ';
   }
 
 
@@ -254,9 +238,9 @@ abstract class Convert {
 
 
   protected function convert_bloc_information() {
-    $type = get_sub_field_object('type_de_bloc');
-    $key  = get_sub_field('type_de_bloc');
-    $text = get_sub_field('contenu');
+    $type = get_sub_field_object('type_de_bloc' );
+    $key  = get_sub_field( 'type_de_bloc' );
+    $text = get_sub_field( 'contenu' );
 
     // remove P from text to get gut compatible
     $text = str_replace( '<p>', '', $text );
@@ -267,7 +251,7 @@ abstract class Convert {
       <div class="wp-block-xyoos-notice hint-box hint-box--' . $key . '" data-type="' . $key . '">
         <div class="hint-box__icon">';
 
-    if ($key == 'tips'):
+    if ($key == 'tips' ):
       $content .= "   
         <svg fill='#FFFFFF' width='100pt' height='100pt' version='1.1' viewbox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
           <g>
@@ -280,19 +264,19 @@ abstract class Convert {
           </g>
         </svg>
       ";
-    elseif ($key == 'advice'):
+    elseif ($key == 'advice' ):
       $content .= '
         <svg fill="#FFF" width="100pt" height="100pt" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
           <path d="m50 5c-24.852 0-45 20.145-45 44.996 0 24.863 20.148 45.004 45 45.004s45-20.141 45-45.004c0-24.852-20.148-44.996-45-44.996zm19.754 33.406l-17.094 26.59c-1.5703 2.4414-4.0234 3.9531-6.7266 4.1406-0.1875 0.015625-0.37891 0.019531-0.56641 0.019531-2.5039 0-4.9062-1.1445-6.668-3.1953l-8.4922-9.9062c-1.7969-2.0977-1.5547-5.2539 0.54297-7.0508s5.2539-1.5547 7.0508 0.53906l7.375 8.6055 16.164-25.152c1.4922-2.3203 4.5859-2.9961 6.9102-1.5039 2.3242 1.4961 2.9961 4.5898 1.5039 6.9141z"></path>
         </svg>
       ';
-    elseif ($key == 'question'):
+    elseif ($key == 'question' ):
       $content .= '
       <svg fill="#FFF" width="100pt" height="100pt" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <path d="m50 3c-12.465 0-24.418 4.9531-33.234 13.766-8.8125 8.8164-13.766 20.77-13.766 33.234s4.9531 24.418 13.766 33.234c8.8164 8.8125 20.77 13.766 33.234 13.766s24.418-4.9531 33.234-13.766c8.8125-8.8164 13.766-20.77 13.766-33.234s-4.9531-24.418-13.766-33.234c-8.8164-8.8125-20.77-13.766-33.234-13.766zm-0.64062 77.922c-2.1758 0-4.1367-1.3125-4.9688-3.3242-0.83203-2.0078-0.375-4.3242 1.1641-5.8633 1.5391-1.5391 3.8555-1.9961 5.8633-1.1641 2.0117 0.83203 3.3203 2.793 3.3203 4.9688-0.003906 2.9688-2.4102 5.375-5.3789 5.3828zm5.8789-26.121s-0.53125 0.19141-0.53125 0.5v4.2695h0.003907c0 2.957-2.3984 5.3555-5.3555 5.3555s-5.3555-2.3984-5.3555-5.3555v-4.2695c0.046875-4.8594 3.1914-9.1445 7.8086-10.652 3.1914-1.0625 5.3008-4.0977 5.1914-7.457-0.21484-4.1094-3.5781-7.3438-7.6914-7.4023-2.9102 0.015626-5.5547 1.6914-6.8086 4.3203-1.2852 2.6641-4.4844 3.7852-7.1484 2.5-2.668-1.2852-3.7852-4.4844-2.5-7.1484 1.4766-3.0938 3.793-5.7109 6.6914-7.5469 2.8945-1.8359 6.25-2.8203 9.6758-2.8359h0.10938c4.7656 0.03125 9.332 1.8945 12.754 5.2109 3.4219 3.3125 5.4297 7.8203 5.6094 12.582 0.13281 3.9258-1.0078 7.793-3.25 11.023-2.2422 3.2266-5.4648 5.6445-9.1914 6.8945z">
         </path>
       </svg>';
-    elseif ($key == 'warning'):
+    elseif ($key == 'warning' ):
       $content .= '
         <svg width="90px" height="84px" viewbox="0 0 90 84" xmlns="http://www.w3.org/2000/svg"
           fill="none" fillrule="evenodd" stroke="#FFFFFF" stroke-width="1" stroke-linecap="none" stroke-linejoin="none">
