@@ -26,13 +26,11 @@ abstract class Convert {
     $target = $blank ? ' target="_blank" ' : ' ';
     $rel = $blank ? ' rel="noopener noreferrer" ' : ' ';
     
-    $html = '
+    return '
       <!-- wp:xyoos/button {'.$isblank.'"buttonClass":"blue"} -->
       <p class="wp-block-xyoos-button has-text-align-center"><a href="'.$url.'"'.$target.'class="button button--medium button--blue"'.$rel.'>'.$label.'</a></p>
       <!-- /wp:xyoos/button -->
     ';
-    var_dump($html);
-    return $html;
   }
 
 
@@ -129,7 +127,7 @@ abstract class Convert {
     if( have_rows('table') ): 
 
       if( $first ) {
-        $html .= '<!-- wp:table --><figure class="wp-block-table"><table><thead>';
+        $html .= '<!-- wp:table {"hasFixedLayout":true} --><figure class="wp-block-table"><table class="has-fixed-layout"><thead>';
       } 
     
       while( have_rows( 'table' ) ): the_row();
