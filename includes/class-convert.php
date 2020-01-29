@@ -8,33 +8,31 @@ abstract class Convert {
   
   protected function convert_definition() {
     $definition = get_sub_field( 'definition' );
-    
     return ' <!-- wp:xyoos/definition {"definitionID":' . $definition->ID . '} /-->';
   }
 
 
   protected function convert_exercice() {
     $exercice = get_sub_field( 'id' );
-    
     return '<!-- wp:xyoos/exercice {"exerciceID":"' . $exercice . '"} /-->';
   }
 
 
   protected function convert_bouton() {
-    $url      = get_sub_field( 'url' );
-    $intitule = get_sub_field( 'intitule' );
-    $target   = get_sub_field( 'cible' ) ? '_blank' : '';
+    $url = get_sub_field( 'url' );
+    $label = get_sub_field( 'intitule' );
+    $blank = get_sub_field( 'cible' );
+    $isblank = $blank ? '' : '"isBlank":false,';
+    $target = $blank ? ' target="_blank" ' : ' ';
+    $rel = $blank ? ' rel="noopener noreferrer" ' : ' ';
     
-    return '
-      <!-- wp:xyoos/button {"buttonClass":"green"} -->
-      <p class="wp-block-xyoos-button">
-        <a href="' . $url . '" target="' . $target . '" class="button button--green" data-type="green" rel="noopener noreferrer">
-          <span class="dashicons dashicons-admin-post" data-icon="admin-post"></span>
-          <span>' . $intitule . '</span>
-        </a>
-      </p>
+    $html = '
+      <!-- wp:xyoos/button {'.$isblank.'"buttonClass":"blue"} -->
+      <p class="wp-block-xyoos-button has-text-align-center"><a href="'.$url.'"'.$target.'class="button button--medium button--blue"'.$rel.'>'.$label.'</a></p>
       <!-- /wp:xyoos/button -->
     ';
+    var_dump($html);
+    return $html;
   }
 
 
