@@ -7,14 +7,15 @@ defined( 'ABSPATH' ) || exit;
 abstract class Convert {
   
   protected function convert_definition() {
-
     $definition = get_sub_field( 'definition' );
+    
     return ' <!-- wp:xyoos/definition {"definitionID":' . $definition->ID . '} /-->';
   }
 
 
   protected function convert_exercice() {
     $exercice = get_sub_field( 'id' );
+    
     return '<!-- wp:xyoos/exercice {"exerciceID":"' . $exercice . '"} /-->';
   }
 
@@ -23,6 +24,7 @@ abstract class Convert {
     $url      = get_sub_field( 'url' );
     $intitule = get_sub_field( 'intitule' );
     $target   = get_sub_field( 'cible' ) ? '_blank' : '';
+    
     return '
       <!-- wp:xyoos/button {"buttonClass":"green"} -->
       <p class="wp-block-xyoos-button">
@@ -107,68 +109,61 @@ abstract class Convert {
 
 
   protected function convert_tableau_5() {
-    $this->convert_tableau( 5 );
+    return $this->convert_tableau( 5 );
   }
 
   protected function convert_tableau_4() {
-    $this->convert_tableau( 4 );
+    return $this->convert_tableau( 4 );
   }
 
   protected function convert_tableau_3() {
-    $this->convert_tableau( 3 );
+    return $this->convert_tableau( 3 );
   }
 
 
   protected function convert_tableau( $nb ) {
+    $table = get_sub_field( 'tableau_' . $nb );
+    $caption = get_sub_field( 'caption' );
+
     $html = '';
-    $cols = array();
+    $first = true;
 
-    for( $i = 1; $i <= $nb; $i++ ) {
-      $cols[] = get_sub_field( 'colonne_' . $i );
-    }
+    if( have_rows('table') ): 
 
-    // Style : 
-    // - head : appliquer sur thead
-    // - Description : la rajouter d'une certaine manière
-    // - finir logique
+      if( $first ) {
+        $html .= '<!-- wp:table --><figure class="wp-block-table"><table><thead>';
+      } 
+    
+      while( have_rows( 'table' ) ): the_row();
 
-    $html = ' 
-      <!-- wp:table -->
-      <figure class="wp-block-table">
-        <table>
-          <thead>
-            <tr>
-              <th></th><th></th><th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>dd</td><td>dd</td><td>dd</td></tr><tr><td></td><td></td><td></td>
-            </tr>
-          </tbody>
-        </table>
-      </figure>
-      
-      
-      <table class="wp-block-table">
-        <tbody>
-          <tr>
-      ';
+        $html .= "<tr>";
 
-      // TODO : finir avec le répéteur
+        for( $i = 1; $i <= $nb; $i++ ):
 
-      foreach( $cols as $col ) {
-        $html .= '<td>' . $col . '</td>';
-      }
-      
-      $html .= '
-          </tr>
-        </tbody>
-      </table>
-      <!-- /wp:table -->
-    ';
+          $val = get_sub_field( 'colonne_' . $i );
+          
+          if( $first ) {
+            $html .= "<th>$val</th>";
+          } else {
+            $html .= "<td>$val</td>";
+          }
+        endfor;
 
-    return 'tableau';
+        $html .= "</tr>";
+
+        if( $first) {
+          $html .= '</thead><tbody>';
+          $first = false;
+        }
+      endwhile; 
+
+      $html .= '</tbody></table></figure><!-- /wp:table -->';
+
+      // Add caption
+      $html .= "<!-- wp:paragraph --><p class='has-text-align-right'>$caption</p><!-- /wp:paragraph -->";
+    endif;
+
+    return $html;
   }
 
 
@@ -177,7 +172,6 @@ abstract class Convert {
     $text     = get_sub_field( 'contenu' );
 
     // Convert texts
-    // TODO Test
     $text = $this->convert_texte( $text );
 
     // Markups
