@@ -89,29 +89,30 @@ class Main extends Convert {
 
 
   public function route_acf_migration() {
-    $groups = acf_get_local_field_groups();
-    $json = [];
+    
+    $json = "";
 
-    foreach ( $groups as $group ) {
+    // get all the local field groups 
+    $field_groups = acf_get_local_field_groups();
 
-      // Fetch the fields for the given group key
-      $fields = acf_get_local_fields( $group['key'] );
+    // loop over each of the gield gruops 
+    foreach( $field_groups as $field_group ) {
 
-      // Remove unecessary key value pair with key "ID"
-      unset( $group['ID'] );
+      // get the field group key 
+      $key = $field_group['key'];
 
-      // Add the fields as an array to the group
-      $group['fields'] = $fields;
+      // if this field group has fields 
+      if( acf_have_local_fields( $key ) ) {
 
-      // Add this group to the main array
-      $json[] = $group;
+        // append the fields 
+        $field_group['fields'] = acf_get_fields( $key );
+
+        $json .= json_encode( $field_group, JSON_PRETTY_PRINT );
+      }
+      
+      // save the acf-json file to the acf-json dir 
+      acf_write_json_field_group( $field_group );
     }
-
-    $json = json_encode( $json, JSON_PRETTY_PRINT );
-
-    // Write output to file for easy import into ACF.
-    $file = get_template_directory() . '/acf-import.json';
-    file_put_contents( $file, $json );
 
     include plugin_dir_path( __FILE__ ) . '../templates/acf-migration-result.php';
   }
