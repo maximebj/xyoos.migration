@@ -14,8 +14,8 @@ class Main extends Convert {
 
   public function add_menu() {
     add_menu_page(
-      'Migration Gutenberg', 
-      'Migration Gutenberg', 
+      'Migration Xyoos', 
+      'Migration Xyoos', 
       'manage_options', 
       'xyoos-migration', 
       array( $this, 'router' ), 
@@ -26,11 +26,18 @@ class Main extends Convert {
 
 
   public function router() {
-    
-    if ( isset( $_GET['action'] ) and $_GET['action'] == 'launch-migration' ) {
-      $this->route_migration();
-    } else {
+
+    if( !isset( $_GET['action'] ) ) {
       $this->route_options();
+      return;
+    }
+    
+    if ( $_GET['action'] == 'launch-content-migration' ) {
+      $this->route_content_migration();
+    }
+    
+    if ( $_GET['action'] == 'launch-acf-migration' ) {
+      $this->route_acf_migration();
     }
   }
 
@@ -40,7 +47,7 @@ class Main extends Convert {
   }
 
 
-  public function route_migration() {
+  public function route_content_migration() {
     
     $content = '';
     $result  = '';
@@ -77,7 +84,36 @@ class Main extends Convert {
     
     wp_update_post( $args );
     
-    include plugin_dir_path( __FILE__ ) . '../templates/migration-result.php';
+    include plugin_dir_path( __FILE__ ) . '../templates/content-migration-result.php';
+  }
+
+
+  public function route_acf_migration() {
+    $groups = acf_get_local_field_groups();
+    $json = [];
+
+    foreach ( $groups as $group ) {
+
+      // Fetch the fields for the given group key
+      $fields = acf_get_local_fields( $group['key'] );
+
+      // Remove unecessary key value pair with key "ID"
+      unset( $group['ID'] );
+
+      // Add the fields as an array to the group
+      $group['fields'] = $fields;
+
+      // Add this group to the main array
+      $json[] = $group;
+    }
+
+    $json = json_encode( $json, JSON_PRETTY_PRINT );
+
+    // Write output to file for easy import into ACF.
+    $file = get_template_directory() . '/acf-import.json';
+    file_put_contents( $file, $json );
+
+    include plugin_dir_path( __FILE__ ) . '../templates/acf-migration-result.php';
   }
         
 }
