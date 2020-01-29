@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: Xyoos Migration
-Description: un plugin pour facilité la migration du site Xyoos
-Author: Zoé Poullenot
-Version: 0.1
+Description: Migration des contenus vers Gutenberg
+Author: Maxime BJ & Zoé Poullenot
+Version: 1.0
 */
 
 namespace XyoosMigration;
