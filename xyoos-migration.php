@@ -10,8 +10,8 @@ namespace XyoosMigration;
 
 defined( 'ABSPATH' ) || exit;
 
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-convert.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-migration.php';
+require_once plugin_dir_path( __FILE__ ) . 'classes/class-convert.php';
+require_once plugin_dir_path( __FILE__ ) . 'classes/class-migration.php';
 
 
 // Launch class
