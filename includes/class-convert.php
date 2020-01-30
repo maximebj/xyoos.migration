@@ -55,16 +55,24 @@ abstract class Convert {
 
     // Img 
     $i = 0; 
-    foreach ($DOM->find('img' ) as $element):
+    foreach ( $DOM->find( 'img' ) as $element ):
 
       // Get ID in classname
-      preg_match_all( '!\d+!', $element->class, $matches);         
+      preg_match_all( '!\d+!', $element->class, $matches );         
       $id = $matches[0][0];
+
+      $caption = isset( $captions[$i] ) ? $captions[$i] : '';
+      if( $caption != '' ) {
+        $caption_html = '<figcaption>' . $caption . '</figcaption>';
+      } else {
+        $caption_html = '';
+      }
+      
 
       // Remove img from DOM
       $element->parent->outertext = '
         <!-- wp:image {"id":' . $id . '} -->
-        <figure class="wp-block-image"><img src="' . $element->src . '" alt="' . $element->alt . '" class="wp-image-' . $id  . '"/><figcaption>' . $captions[$i] . '</figcaption></figure>
+        <figure class="wp-block-image"><img src="' . $element->src . '" alt="' . $element->alt . '" class="wp-image-' . $id  . '"/>' . $caption_html . '</figure>
         <!-- /wp:image -->
       ';
 
