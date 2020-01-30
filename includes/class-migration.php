@@ -65,6 +65,13 @@ class Main extends Convert {
       'orderby' => "date",
       'order' => "ASC",
     );
+
+    // Debug mode
+    // Test lesson: 15108
+    // $args = array(
+    //   'post_type' => 'cours',
+    //   'p' => 222,
+    // );
     
     $post = new \WP_Query($args);
     
