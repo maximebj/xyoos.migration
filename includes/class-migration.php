@@ -53,12 +53,10 @@ class Main extends Convert {
     $post_type = $_GET['post_type'];
     $offset = intval( $_GET['offset'] );
 
-    $nb_to_convert = 50;
+    $nb_to_convert = 30;
 
     $content = ''; // HTML content to save
     $result  = ''; // Display Migration state
-    
-    $post_ID = 209;
 
 
     // Get posts to migrate
@@ -66,6 +64,8 @@ class Main extends Convert {
       'offset' => $offset,
       'posts_per_page' => $nb_to_convert,
       'post_type' => $post_type,
+      'orderby' => "date",
+      'order' => ASC,
     );
     
     $post = new \WP_Query($args);
