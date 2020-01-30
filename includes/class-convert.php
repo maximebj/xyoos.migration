@@ -249,8 +249,8 @@ abstract class Convert {
 
     if( isset( $image['ID'] ) ) {
     $img_markup = '
-      <!-- wp:image {"id":' . $image_id . ' } -->
-        <figure class="wp-block-image aligncenter"><img src="' . $image['sizes']['large'] . '" alt="' . $image['alt'] . '" class="wp-image-' . $image_id . '"/></figure>
+      <!-- wp:image {"id":' . $image['ID'] . ' } -->
+        <figure class="wp-block-image aligncenter"><img src="' . $image['sizes']['large'] . '" alt="' . $image['alt'] . '" class="wp-image-' . $image['ID'] . '"/></figure>
       <!-- /wp:image --> 
     ';
     } else {
