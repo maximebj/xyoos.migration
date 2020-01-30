@@ -68,11 +68,10 @@ abstract class Convert {
         $caption_html = '';
       }
       
-
       // Remove img from DOM
       $element->parent->outertext = '
-        <!-- wp:image {"id":' . $id . '} -->
-        <figure class="wp-block-image"><img src="' . $element->src . '" alt="' . $element->alt . '" class="wp-image-' . $id  . '"/>' . $caption_html . '</figure>
+        <!-- wp:image {"align":"center","id":' . $id . '} -->
+        <figure class="wp-block-image aligncenter"><img src="' . $element->src . '" alt="' . $element->alt . '" class="wp-image-' . $id  . '"/>' . $caption_html . '</figure>
         <!-- /wp:image -->
       ';
 
@@ -230,9 +229,7 @@ abstract class Convert {
     $content_markup = $text;
     $img_markup = '
       <!-- wp:image {"id":' . $image['ID'] . ' } -->
-        <figure class="wp-block-image">
-          <img src="' . $image['sizes']['large'] . '" alt="' . $image['alt'] . '" class="wp-image-' . $image['ID'] . '"/>
-        </figure>
+        <figure class="wp-block-image aligncenter"><img src="' . $image['sizes']['large'] . '" alt="' . $image['alt'] . '" class="wp-image-' . $image['ID'] . '"/></figure>
       <!-- /wp:image --> 
     ';
     

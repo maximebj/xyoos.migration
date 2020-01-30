@@ -72,11 +72,13 @@ class Main extends Convert {
     $total = $post->found_posts;
     
     if ( $post->have_posts() ): while ( $post->have_posts() ): $post->the_post();
+      
+      $content = "";
 
       if ( have_rows('cours') ): while ( have_rows('cours') ): the_row();
 
         $fn = 'convert_' . get_row_layout();
-        $content = $this->$fn();
+        $content .= $this->$fn();
 
       endwhile; endif; // Row
 
