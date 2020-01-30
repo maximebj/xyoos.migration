@@ -13,6 +13,7 @@
               <option value="cours" selected>Cours</option>
               <option value="post">Articles</option>
               <option value="tutoriels">Tutoriels</option>
+              <option value="anfa">Cours ANFA</option>
             </select>
             <button class="button button-primary">Démarrer la migration</button>
           </form>
