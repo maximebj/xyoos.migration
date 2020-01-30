@@ -96,28 +96,28 @@ abstract class Convert {
     $text = (string)$DOM;
 
     // P
-    $text = str_replace('<p', '<!-- wp:paragraph --><p', $text);
-    $text = str_replace('</p>', '</p><!-- /wp:paragraph -->', $text);
+    $text = str_replace( '<p', '<!-- wp:paragraph --><p', $text );
+    $text = str_replace( '</p>', '</p><!-- /wp:paragraph -->', $text );
 
     // Hx
-    $text = str_replace('<h2', '<!-- wp:heading --><h2', $text);
-    $text = str_replace('</h2>', '</h2><!-- /wp:heading -->', $text);
-    $text = str_replace('<h3', '<!-- wp:heading {"level":3} --><h3', $text);
-    $text = str_replace('</h3>', '</h3><!-- /wp:heading -->', $text);
-    $text = str_replace('<h4', '<!-- wp:heading {"level":4} --><h4', $text);
-    $text = str_replace('</h4>', '</h4><!-- /wp:heading -->', $text);
-    $text = str_replace('<h5', '<!-- wp:heading {"level":5} --><h5', $text);
-    $text = str_replace('</h5>', '</h5><!-- /wp:heading -->', $text);
-    $text = str_replace('<h6', '<!-- wp:heading {"level":6} --><h6', $text);
-    $text = str_replace('</h6>', '</h6><!-- /wp:heading -->', $text);
+    $text = str_replace( '<h2', '<!-- wp:heading --><h2', $text );
+    $text = str_replace( '</h2>', '</h2><!-- /wp:heading -->', $text );
+    $text = str_replace( '<h3', '<!-- wp:heading {"level":3} --><h3', $text );
+    $text = str_replace( '</h3>', '</h3><!-- /wp:heading -->', $text );
+    $text = str_replace( '<h4', '<!-- wp:heading {"level":4} --><h4', $text );
+    $text = str_replace( '</h4>', '</h4><!-- /wp:heading -->', $text );
+    $text = str_replace( '<h5', '<!-- wp:heading {"level":5} --><h5', $text );
+    $text = str_replace( '</h5>', '</h5><!-- /wp:heading -->', $text );
+    $text = str_replace( '<h6', '<!-- wp:heading {"level":6} --><h6', $text );
+    $text = str_replace( '</h6>', '</h6><!-- /wp:heading -->', $text );
 
     // UL
-    $text = str_replace('<ul', '<!-- wp:list --><ul', $text);
-    $text = str_replace('</ul>', '</ul><!-- /wp:list -->', $text);
+    $text = str_replace( '<ul', '<!-- wp:list --><ul', $text );
+    $text = str_replace( '</ul>', '</ul><!-- /wp:list -->', $text );
 
     // OL
-    $text = str_replace('<ol', '<!-- wp:list {"ordered":true} --><ol', $text);
-    $text = str_replace('</ol>', '</ol><!-- /wp:list -->', $text);
+    $text = str_replace( '<ol', '<!-- wp:list {"ordered":true} --><ol', $text );
+    $text = str_replace( '</ol>', '</ol><!-- /wp:list -->', $text );
 
     // Encode BR that could cause issues
     $text = trim( preg_replace( '/\s\s+/', ' ', $text ) ); 
