@@ -55,19 +55,23 @@ class Main extends Convert {
 
     $nb_to_convert = 50;
 
-    $content = '';
-    $result  = '';
+    $content = ''; // HTML content to save
+    $result  = ''; // Display Migration state
     
     $post_ID = 209;
 
 
     // Get posts to migrate
     $args = array(
-      'p' => $post_ID,
-      'post_type' => 'cours'
+      'offset' => $offset,
+      'posts_per_page' => $nb_to_convert,
+      'post_type' => $post_type,
     );
     
     $post = new \WP_Query($args);
+    
+    // Get total of posts
+    $total = $post->found_posts;
     
     if ( $post->have_posts() ): while ( $post->have_posts() ): $post->the_post();
         
@@ -77,20 +81,20 @@ class Main extends Convert {
         $content .= $this->$fn();
 
       endwhile; endif; // Row
+
+      // Update Post
+      $args = array(
+        'ID' => get_the_ID(),
+        'post_content' => $content
+      );
+
+      wp_update_post( $args );
       
-      $result .= '<li>Migré : ' . get_the_title() . '</li>';
+      $result .= '<li>Migré : <strong>' . get_the_title() . '</strong> [' . get_the_ID() . ']</li>';
     
     endwhile; endif; // Post
     wp_reset_postdata();
-    
-    // Update Post
-    $args = array(
-      'ID' => $post_ID,
-      'post_content' => $content
-    );
-    
-    wp_update_post( $args );
-    
+
     include plugin_dir_path( __FILE__ ) . '../templates/content-migration-result.php';
   }
 

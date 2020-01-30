@@ -1,13 +1,14 @@
 <div class="wrap">
   <h1>Migration des contenus Xyoos</h1>
   
-  <ol>
-    <?php echo $result; ?>
-  </ol>
+  <?php if( $offset + $nb_to_convert > $total ): ?>
+  <h3>La migration est terminée ! </h3>
+  <p><?php echo $total; ?> publications ont été traitées.</p>
 
+  <?php else: ?>
   <table class="form-table">
     <tr valign="top">
-      <th scope="row">Refaire une migration : 
+      <th scope="row">Prochain lot : 
         <td>
           <form method="get" action="admin.php" >
             <input type="hidden" name="page" value="xyoos-migration">
@@ -20,4 +21,14 @@
       </th>
     </tr>
   </table>
+  <?php endif; ?>
+
+  <hr>
+
+  <h3>Résultats de la migration</h3>
+
+  <ol start="<?php echo $offset + 1; ?>">
+    <?php echo $result; ?>
+  </ol>
+
 </div>
