@@ -56,12 +56,16 @@ abstract class Convert {
     // Img 
     $i = 0; 
     foreach ( $DOM->find( 'img' ) as $element ):
-
+      
       // Get ID in classname
-      preg_match_all( '!\d+!', $element->class, $matches );         
-      $id = $matches[0][0];
-
+      preg_match_all( '!\d+!', $element->class, $matches ); 
+        
+      // Get image ID
+      $id = isset( $matches[0][0] ) ? $matches[0][0] : false;
+      
+      // Get Caption
       $caption = isset( $captions[$i] ) ? $captions[$i] : '';
+
       if( $caption != '' ) {
         $caption_html = '<figcaption>' . $caption . '</figcaption>';
       } else {
@@ -69,11 +73,21 @@ abstract class Convert {
       }
       
       // Remove img from DOM
-      $element->parent->outertext = '
-        <!-- wp:image {"align":"center","id":' . $id . '} -->
-        <figure class="wp-block-image aligncenter"><img src="' . $element->src . '" alt="' . $element->alt . '" class="wp-image-' . $id  . '"/>' . $caption_html . '</figure>
-        <!-- /wp:image -->
-      ';
+      if( $id ) {
+        $img_markup = '
+          <!-- wp:image {"align":"center","id":' . $id . '} -->
+          <figure class="wp-block-image aligncenter"><img src="' . $element->src . '" alt="' . $element->alt . '" class="wp-image-' . $id  . '" />' . $caption_html . '</figure>
+          <!-- /wp:image -->
+        ';
+      } else {
+        $img_markup = '
+          <!-- wp:image {"align":"center"} -->
+          <figure class="wp-block-image aligncenter"><img src="' . $element->src . '" alt="' . $element->alt . ' />' . $caption_html . '</figure>
+          <!-- /wp:image -->
+        ';
+      }
+
+      $element->parent->outertext = $img_markup;
 
       $i++;
     endforeach;
@@ -232,11 +246,20 @@ abstract class Convert {
 
     // Markups
     $content_markup = $text;
+
+    if( isset( $image['ID'] ) ) {
     $img_markup = '
-      <!-- wp:image {"id":' . $image['ID'] . ' } -->
-        <figure class="wp-block-image aligncenter"><img src="' . $image['sizes']['large'] . '" alt="' . $image['alt'] . '" class="wp-image-' . $image['ID'] . '"/></figure>
+      <!-- wp:image {"id":' . $image_id . ' } -->
+        <figure class="wp-block-image aligncenter"><img src="' . $image['sizes']['large'] . '" alt="' . $image['alt'] . '" class="wp-image-' . $image_id . '"/></figure>
       <!-- /wp:image --> 
     ';
+    } else {
+      $img_markup = '
+        <!-- wp:image -->
+          <figure class="wp-block-image aligncenter"><img src="' . $image['sizes']['large'] . '" alt="' . $image['alt'] . '" /></figure>
+        <!-- /wp:image --> 
+      ';
+    }
     
     // Dispatch left / right
     if ($position == 'left' ) {
