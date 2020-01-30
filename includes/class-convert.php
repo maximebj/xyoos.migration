@@ -97,11 +97,15 @@ abstract class Convert {
     $text = str_replace('<h6', '<!-- wp:heading {"level":6} --><h6', $text);
     $text = str_replace('</h6>', '</h6><!-- /wp:heading -->', $text);
 
-    // Li
+    // UL
     $text = str_replace('<ul', '<!-- wp:list --><ul', $text);
     $text = str_replace('</ul>', '</ul><!-- /wp:list -->', $text);
 
-    // Encode Br that could cause issues
+    // OL
+    $text = str_replace('<ol', '<!-- wp:list {"ordered":true} --><ol', $text);
+    $text = str_replace('</ol>', '</ol><!-- /wp:list -->', $text);
+
+    // Encode BR that could cause issues
     $text = trim( preg_replace( '/\s\s+/', ' ', $text ) ); 
     $text = str_replace( '<br /> ', '&lt;br>', $text );
 
@@ -161,7 +165,8 @@ abstract class Convert {
       $html .= '</tbody></table></figure><!-- /wp:table -->';
 
       // Add caption
-      $html .= "<!-- wp:paragraph --><p class='has-text-align-right'>$caption</p><!-- /wp:paragraph -->";
+      $html .= '<!-- wp:xyoos/caption --><p class="wp-block-xyoos-caption caption">' . $caption . '</p>
+      <!-- /wp:xyoos/caption -->';
     endif;
 
     return $html;
