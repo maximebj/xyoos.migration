@@ -8,7 +8,7 @@
           <form method="get" action="admin.php" >
             <input type="hidden" name="page" value="xyoos-migration">
             <input type="hidden" name="action" value="launch-content-migration">
-            <input type="number" name="offset" min="0" step="50" value="0" class="small-text">
+            <input type="number" name="offset" min="0" step="<?php echo $this->nb_to_convert; ?>" value="0" class="small-text">
             <select name="post_type">
               <option value="cours" selected>Cours</option>
               <option value="post">Articles</option>

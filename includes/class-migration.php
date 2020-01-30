@@ -6,6 +6,8 @@ defined( 'ABSPATH' ) || exit;
 
 class Main extends Convert {
 
+  public $nb_to_convert = 30;
+
   public function register_hooks() {
     add_action( 'admin_menu', array( $this, 'add_menu' ) );
   }
@@ -53,24 +55,23 @@ class Main extends Convert {
     $post_type = $_GET['post_type'];
     $offset = intval( $_GET['offset'] );
 
-    $nb_to_convert = 30;
-
     $results = ''; // Display Migration state
 
     // Get posts to migrate
     $args = array(
       'offset' => $offset,
-      'posts_per_page' => $nb_to_convert,
+      'posts_per_page' => $this->nb_to_convert,
       'post_type' => $post_type,
       'orderby' => "date",
       'order' => "ASC",
+      'post__not_in' => array( 14841 ), // Posts created recently with gut would be overwritten
     );
 
     // Debug mode
     // Test lesson: 15108
     // $args = array(
     //   'post_type' => 'cours',
-    //   'p' => 222,
+    //   'p' => 351,
     // );
     
     $post = new \WP_Query($args);

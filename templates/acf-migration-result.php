@@ -3,4 +3,5 @@
   <pre>
     <?php echo $json; ?>
   </pre>
+  <p><a href="/wp-admin/admin.php?page=xyoos-migration">Retour aux outils de migration</a></p>
 </div>
