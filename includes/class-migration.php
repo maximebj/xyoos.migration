@@ -6,7 +6,6 @@ defined( 'ABSPATH' ) || exit;
 
 class Main extends Convert {
 
-
   public function register_hooks() {
     add_action( 'admin_menu', array( $this, 'add_menu' ) );
   }
@@ -48,11 +47,19 @@ class Main extends Convert {
 
 
   public function route_content_migration() {
+
+    require_once plugin_dir_path(__FILE__) . '../lib/simple_html_dom.php';
     
+    $post_type = $_GET['post_type'];
+    $offset = intval( $_GET['offset'] );
+
+    $nb_to_convert = 50;
+
     $content = '';
     $result  = '';
     
-    $post_ID = 15108;
+    $post_ID = 209;
+
 
     // Get posts to migrate
     $args = array(

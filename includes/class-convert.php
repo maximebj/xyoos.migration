@@ -39,8 +39,6 @@ abstract class Convert {
     $text = ( ! $text ) ? get_sub_field( 'contenu' ) : $text;
 
     if( $text == "" ) { return ''; }
-  
-    require_once plugin_dir_path(__FILE__) . '../lib/simple_html_dom.php';
 
     $DOM = str_get_html( $text );
 

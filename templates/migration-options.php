@@ -8,7 +8,13 @@
           <form method="get" action="admin.php" >
             <input type="hidden" name="page" value="xyoos-migration">
             <input type="hidden" name="action" value="launch-content-migration">
-            <button class="button button-primary">Go</button>
+            <input type="number" name="offset" min="0" step="50" value="0" class="small-text">
+            <select name="post_type">
+              <option value="cours" selected>Cours</option>
+              <option value="post">Articles</option>
+              <option value="tutoriels">Tutoriels</option>
+            </select>
+            <button class="button button-primary">Démarrer la migration</button>
           </form>
         </td>
       </th>
@@ -20,7 +26,7 @@
           <form method="get" action="admin.php" >
             <input type="hidden" name="page" value="xyoos-migration">
             <input type="hidden" name="action" value="launch-acf-migration">
-            <button class="button button-primary">Go</button>
+            <button class="button button-primary">Générer les JSON</button>
           </form>
         </td>
       </th>
