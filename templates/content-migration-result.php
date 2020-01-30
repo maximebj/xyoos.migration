@@ -28,7 +28,7 @@
   <h3>Résultats de la migration</h3>
 
   <ol start="<?php echo $offset + 1; ?>">
-    <?php echo $result; ?>
+    <?php echo $results; ?>
   </ol>
 
 </div>

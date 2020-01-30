@@ -55,9 +55,7 @@ class Main extends Convert {
 
     $nb_to_convert = 30;
 
-    $content = ''; // HTML content to save
-    $result  = ''; // Display Migration state
-
+    $results = ''; // Display Migration state
 
     // Get posts to migrate
     $args = array(
@@ -65,7 +63,7 @@ class Main extends Convert {
       'posts_per_page' => $nb_to_convert,
       'post_type' => $post_type,
       'orderby' => "date",
-      'order' => ASC,
+      'order' => "ASC",
     );
     
     $post = new \WP_Query($args);
@@ -74,11 +72,11 @@ class Main extends Convert {
     $total = $post->found_posts;
     
     if ( $post->have_posts() ): while ( $post->have_posts() ): $post->the_post();
-        
+
       if ( have_rows('cours') ): while ( have_rows('cours') ): the_row();
 
         $fn = 'convert_' . get_row_layout();
-        $content .= $this->$fn();
+        $content = $this->$fn();
 
       endwhile; endif; // Row
 
@@ -90,7 +88,7 @@ class Main extends Convert {
 
       wp_update_post( $args );
       
-      $result .= '<li>Migré : <strong>' . get_the_title() . '</strong> [' . get_the_ID() . ']</li>';
+      $results .= '<li>Migré : <a href="/wp-admin/post.php?post=' . get_the_ID() . '&action=edit" target="_blank">' . get_the_title() . '</a> [' . get_the_ID() . ']</li>';
     
     endwhile; endif; // Post
     wp_reset_postdata();
